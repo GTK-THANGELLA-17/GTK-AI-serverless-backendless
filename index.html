@@ -4,187 +4,209 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Search</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
        /* Reset default margin and padding */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
-    line-height: 1.6;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    transition: background-color 0.3s, color 0.3s;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F1F1F2;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-.container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 0 20px;
-}
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
 
-h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    text-align: center;
-}
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-.input-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-input[type="text"] {
-    flex: 1;
-    padding: 12px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-}
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+        }
 
-button {
-    padding: 12px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #90AFC5;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-button:hover {
-    background-color: #45a049;
-}
+        button:hover {
+            background-color: #2A3132;
+        }
 
-.card {
+        .card {
     margin-top: 30px;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     background-color: #fff;
+    position: relative; /* Ensure relative positioning for absolute children */
 }
 
-.card-header {
-    border-bottom: 2px solid #4CAF50;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-}
 
-.card-header h2 {
-    font-size: 24px;
-}
+        .card-header {
+            border-bottom: 2px solid #4CAF50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
 
-.card-body {
-    max-height: 300px;
-    overflow-y: auto;
-}
+        .card-header h2 {
+            font-size: 24px;
+        }
 
-.button-container {
-    margin-top: 30px;
-    display: flex;
-    justify-content: space-around;
-}
+        .card-body {
+            max-height: 300px;
+            overflow-y: auto;
+        }
 
-#voiceSelectContainer {
-    margin-top: 20px;
-}
+        .button-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-around;
+        }
 
-#voiceSelectContainer label {
-    font-size: 16px;
-}
+        #voiceSelectContainer {
+            margin-top: 20px;
+        }
 
-#voiceSelectContainer select {
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    background-color: #fff;
-    cursor: pointer;
-}
+        #voiceSelectContainer label {
+            font-size: 16px;
+        }
 
-#voiceSelectContainer select:focus {
-    border-color: #4CAF50;
-}
+        #voiceSelectContainer select {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            background-color: #fff;
+            cursor: pointer;
+        }
 
-.mode-buttons {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
+        #voiceSelectContainer select:focus {
+            border-color: #4CAF50;
+        }
 
-.mode-buttons button {
-    background: none;
-    border: none;
-    cursor: pointer;
-}
+        .mode-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
 
-.mode-buttons img {
-    width: 30px;
-    height: auto;
-}
+        .mode-buttons button {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
 
-/* Dark mode styles */
-.dark-mode {
-    background-color: #121212;
-    color: #ffffff;
-}
+        .mode-buttons i {
+            font-size: 30px;
+            color: #2A3132; /* Color for darkmode/lightmode icons */
+        }
 
-/* Add other dark mode styles here */
+        /* Dark mode styles */
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .dark-mode button {
+            background-color: #666;
+            color: #fff;
+        }
+
+        .dark-mode button:hover {
+            background-color: #555;
+        }
+
+        .dark-mode .card {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .dark-mode .card-header {
+            border-color: #4CAF50;
+        }
+
+        .dark-mode #voiceSelectContainer select {
+            border-color: #666;
+            background-color: #444;
+        }
+
+        .dark-mode #voiceSelectContainer select:focus {
+            border-color: #4CAF50;
+        }
 
 
-/* Dark mode */
-.dark-mode {
-    background-color: #333;
-    color: #fff;
-}
+        .footer-icon {
+            font-size: 24px;
+            margin: 0 10px;
+        }
 
-.dark-mode button {
-    background-color: #666;
-    color: #fff;
-}
+        
+        .query-history {
+            text-align: left;
+            margin-top: 20px;
+        }
 
-.dark-mode button:hover {
-    background-color: #555;
-}
+        .share-options {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-.dark-mode .card {
-    background-color: #444;
-    color: #fff;
-}
+        .share-option {
+            margin: 0 10px;
+            cursor: pointer;
+        }
 
-.dark-mode .card-header {
-    border-color: #4CAF50;
-}
-
-.dark-mode #voiceSelectContainer select {
-    border-color: #666;
-    background-color: #444;
-}
-
-.dark-mode #voiceSelectContainer select:focus {
-    border-color: #4CAF50;
-}
-
+        .share-option:hover {
+            color: #45a049;
+        }
 
     </style>
 </head>
 <body>
+    <header>
+        <h1>GTK AI  <i class="fas fa-robot footer-icon"></i></h1>
+    </header>
+
     <div class="container">
         <h1>AI Search</h1>
         <div class="input-container">
             <input type="text" id="searchInput" placeholder="Speak or type your query...">
             <button onclick="startRecognition()"><i class="fas fa-microphone"></i></button>
-
         </div>
         <button onclick="search()">Search</button>
         <div id="searchResult"></div>
@@ -199,17 +221,41 @@ button:hover {
         </div>
     </div>
 
-    <!-- Copy and download buttons -->
-    <div id="buttonContainer" class="button-container" style="display: none;">
-        <button id="copyButton" onclick="copyResponse()" disabled>Copy Response</button>
-        <button id="downloadButton" onclick="downloadResponse()" disabled>Download Response</button>
-        <button id="speakButton" onclick="speakResponse()" disabled>Speak Response</button>
-    </div>
+   <!-- Copy and download buttons -->
+<div id="buttonContainer" class="button-container" style="display: none;">
+    <button id="copyButton" onclick="copyResponse()" disabled>Copy Response</button>
+    <button id="downloadButton" onclick="downloadResponse()" disabled>Download Response</button>
+    <button id="speakButton" onclick="speakResponse()" disabled>Speak Response</button>
+</div>
 
 <div class="mode-buttons">
-        <button onclick="toggleLightMode()"><i class="fas fa-sun"></i></button>
-        <button onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
-    </div>
+    <button onclick="toggleLightMode()"><i class="far fa-sun"></i></button>
+    <button onclick="toggleDarkMode()"><i class="far fa-moon"></i></button>
+</div>
+
+<!-- Query History -->
+<div class="query-history" id="queryHistoryContainer" style="display: none;">
+    <h2>Query History</h2>
+    <ul id="queryHistory">
+        <!-- Query history items will be dynamically added here -->
+    </ul>
+    <button onclick="clearHistory()">Clear History</button>
+</div>
+
+<!-- Share Options -->
+<div id="shareOptions" class="share-options" style="display: none;">
+    <button onclick="shareByEmail()">Email</button>
+    <button onclick="shareOnWhatsApp()">WhatsApp</button>
+    <button onclick="shareOnInstagram()">Instagram</button>
+    <button onclick="copyLink()">Copy Link</button>
+</div>
+
+    <footer id="footer">
+        <li>Designed and built by Your G.Thangella &copy; 2024. All rights reserved.</li>
+        <li>This website is protected by copyright law. Unauthorized use or modification of the code is prohibited.</li>
+        <li>Contact support for assistance: imgtk17@gmail.com</li>
+<i class="fas fa-robot footer-icon"></i>
+    </footer>
 
     <script>
         let recognition = new webkitSpeechRecognition(); // Create a SpeechRecognition object
@@ -281,7 +327,7 @@ button:hover {
             return query.match(regex);
         }
 
-        // Define the data to search within
+         // Define the data to search within
 const searchData = [
     { query: "hello", response: "Hello! How can I help you?" },
     { query: "thangella", response: "The Creator of this AI" },
@@ -320,37 +366,37 @@ Software plays a critical role in modern technology, enabling computers and elec
 
 
         // Function to display response with typing effect
-function displayResponse(query, response) {
-    const searchResultDiv = document.getElementById("searchResult");
-    searchResultDiv.innerHTML = `
-        <div class="card">
-            <div class="card-header">
-                <h2>Query: ${query}</h2>
-            </div>
-            <div class="card-body">
-                <p><strong>Response:</strong></p>
-                <p id="responseText"></p>
-            </div>
-        </div>
-    `;
-    document.getElementById("buttonContainer").style.display = "block"; // Show button container
-    document.getElementById("copyButton").disabled = false; // Enable copy button
-    document.getElementById("downloadButton").disabled = false; // Enable download button
-    document.getElementById("speakButton").disabled = false; // Enable speak button
+        function displayResponse(query, response) {
+            const searchResultDiv = document.getElementById("searchResult");
+            searchResultDiv.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Query: ${query}</h2>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Response:</strong></p>
+                        <p id="responseText"></p>
+                    </div>
+                </div>
+            `;
+            document.getElementById("buttonContainer").style.display = "block"; // Show button container
+            document.getElementById("copyButton").disabled = false; // Enable copy button
+            document.getElementById("downloadButton").disabled = false; // Enable download button
+            document.getElementById("speakButton").disabled = false; // Enable speak button
 
-    // Simulate typing effect
-    const responseTextElement = document.getElementById("responseText");
-    const responseCharacters = response.split('');
-    let index = 0;
-    const typingInterval = setInterval(() => {
-        if (index < responseCharacters.length) {
-            responseTextElement.textContent += responseCharacters[index++];
-        } else {
-            clearInterval(typingInterval);
+            // Simulate typing effect
+            const responseTextElement = document.getElementById("responseText");
+            const responseCharacters = response.split('');
+            let index = 0;
+            const typingInterval = setInterval(() => {
+                if (index < responseCharacters.length) {
+                    responseTextElement.textContent += responseCharacters[index++];
+                } else {
+                    clearInterval(typingInterval);
+                    showShareOptions(response); // Show share options after typing effect completes
+                }
+            }, 50); // Adjust typing speed as needed
         }
-    }, 50); // Adjust typing speed as needed
-}
-
 
         // Function to copy the response to clipboard
         function copyResponse() {
@@ -392,18 +438,60 @@ function displayResponse(query, response) {
             speakResponse();
         }
 
-function toggleDarkMode() {
-    document.body.classList.add("dark-mode");
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.add("dark-mode");
+        }
+
+        // Function to toggle light mode
+        function toggleLightMode() {
+            document.body.classList.remove("dark-mode");
+        }
+
+        // Function to copy the link to the clipboard
+function copyLink(url) {
+    const tempTextArea = document.createElement('textarea');
+    tempTextArea.value = url;
+    document.body.appendChild(tempTextArea);
+    tempTextArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextArea);
+    alert('Link copied to clipboard!');
 }
 
-function toggleLightMode() {
-    document.body.classList.remove("dark-mode");
-}
 
+        // Function to share via email
+        function shareByEmail() {
+            const responseText = document.getElementById("responseText").innerText;
+            const subject = encodeURIComponent('AI Search Response');
+            const body = encodeURIComponent(responseText);
+            const url = `https://mail.google.com/mail/?view=cm&su=${subject}&body=${body}`;
+            window.open(url, '_blank');
+        }
+
+        // Function to share via WhatsApp
+        function shareOnWhatsApp() {
+            const responseText = document.getElementById("responseText").innerText;
+            const text = encodeURIComponent(responseText);
+            const url = `https://api.whatsapp.com/send?text=${text}`;
+            window.open(url, '_blank');
+        }
+
+        // Function to share via Instagram
+        function shareOnInstagram() {
+            const responseText = document.getElementById("responseText").innerText;
+            const text = encodeURIComponent(responseText);
+            const url = `https://www.instagram.com/?text=${text}`;
+            window.open(url, '_blank');
+        }
+
+        // Function to show share options
+        function showShareOptions(responseText) {
+            document.getElementById('shareOptions').style.display = 'block';
+        }
 
 
     </script>
-
 
 </body>
 </html>
