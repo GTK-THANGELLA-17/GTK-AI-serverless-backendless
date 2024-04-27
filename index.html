@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Search</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+       /* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.card {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.card-header {
+    border-bottom: 2px solid #4CAF50;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.card-header h2 {
+    font-size: 24px;
+}
+
+.card-body {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.button-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+}
+
+#voiceSelectContainer {
+    margin-top: 20px;
+}
+
+#voiceSelectContainer label {
+    font-size: 16px;
+}
+
+#voiceSelectContainer select {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#voiceSelectContainer select:focus {
+    border-color: #4CAF50;
+}
+
+.mode-buttons {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.mode-buttons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.mode-buttons img {
+    width: 30px;
+    height: auto;
+}
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Add other dark mode styles here */
+
+
+/* Dark mode */
+.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode button {
+    background-color: #666;
+    color: #fff;
+}
+
+.dark-mode button:hover {
+    background-color: #555;
+}
+
+.dark-mode .card {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-mode .card-header {
+    border-color: #4CAF50;
+}
+
+.dark-mode #voiceSelectContainer select {
+    border-color: #666;
+    background-color: #444;
+}
+
+.dark-mode #voiceSelectContainer select:focus {
+    border-color: #4CAF50;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Search</h1>
+        <div class="input-container">
+            <input type="text" id="searchInput" placeholder="Speak or type your query...">
+            <button onclick="startRecognition()"><i class="fas fa-microphone"></i></button>
+
+        </div>
+        <button onclick="search()">Search</button>
+        <div id="searchResult"></div>
+
+        <!-- Voice selection -->
+        <div id="voiceSelectContainer" style="display: none;">
+            <label for="voiceSelect">Select Voice:</label>
+            <select id="voiceSelect" onchange="changeVoice()">
+                <option value="male">Male Voice</option>
+                <option value="female">Female Voice</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Copy and download buttons -->
+    <div id="buttonContainer" class="button-container" style="display: none;">
+        <button id="copyButton" onclick="copyResponse()" disabled>Copy Response</button>
+        <button id="downloadButton" onclick="downloadResponse()" disabled>Download Response</button>
+        <button id="speakButton" onclick="speakResponse()" disabled>Speak Response</button>
+    </div>
+
+<div class="mode-buttons">
+        <button onclick="toggleLightMode()"><i class="fas fa-sun"></i></button>
+        <button onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
+    </div>
+
+    <script>
+        let recognition = new webkitSpeechRecognition(); // Create a SpeechRecognition object
+        recognition.continuous = true; // Set continuous listening mode
+        recognition.interimResults = true; // Enable interim results for real-time recognition
+
+        // Event listener for speech recognition result
+        recognition.onresult = function(event) {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    document.getElementById("searchInput").value += event.results[i][0].transcript + ' ';
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
+                    document.getElementById("searchInput").value = interimTranscript;
+                }
+            }
+        };
+
+        // Function to start speech recognition
+        function startRecognition() {
+            recognition.start();
+        }
+
+        // Function to search for the query
+        function search() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            let bestMatch = null; // Best matching response
+
+            // Preprocess the input (remove punctuation, convert to lowercase, etc.)
+            const processedInput = preprocessInput(input);
+
+            // Perform keyword extraction to identify relevant keywords
+            const keywords = extractKeywords(processedInput);
+
+            // Use regular expressions to match keywords against predefined queries
+            for (let i = 0; i < searchData.length; i++) {
+                const query = searchData[i].query.toLowerCase();
+                if (matchesKeywords(query, keywords)) {
+                    bestMatch = searchData[i];
+                    break;
+                }
+            }
+
+            // Display the best matching response
+            if (bestMatch) {
+                displayResponse(bestMatch.query, bestMatch.response);
+            } else {
+                displayResponse(input, "Data not found.");
+            }
+        }
+
+        // Function to preprocess the input text
+        function preprocessInput(input) {
+            // Remove punctuation and convert to lowercase
+            return input.replace(/[^\w\s]/gi, '').toLowerCase();
+        }
+
+        // Function to extract keywords from the input text
+        function extractKeywords(input) {
+            // Simple keyword extraction by splitting input into words
+            return input.split(' ');
+        }
+
+        // Function to match keywords against a query
+        function matchesKeywords(query, keywords) {
+            // Match all keywords using regular expressions
+            const regex = new RegExp(keywords.join('|'), 'gi');
+            return query.match(regex);
+        }
+
+        // Define the data to search within
+const searchData = [
+    { query: "hello", response: "Hello! How can I help you?" },
+    { query: "thangella", response: "The Creator of this AI" },
+    { query: "how are you", response: "I'm just a computer program, but I'm functioning well. How about you?" },
+    { query: "your query", response: "Your response" },
+    { query: "when this ai created and by whom", response: "This ai is created on 27-04-2024 By G.Thangella" },
+    { query: "software", response: `Software refers to a set of instructions or programs that tell a computer or other electronic devices what to do. It encompasses applications, operating systems, utilities, and other programs that enable computers to perform various tasks. Software can be broadly classified into two main categories:
+
+System Software: This type of software provides the foundational functions necessary for a computer system to operate. It includes operating systems like Windows, macOS, Linux, and Unix, which manage hardware resources and provide a user interface for interacting with the computer. System software also includes device drivers, which allow the operating system to communicate with hardware devices such as printers, graphics cards, and storage drives.
+
+Application Software: Application software consists of programs designed to perform specific tasks or provide functionality for end-users. Examples include word processors like Microsoft Word, spreadsheet applications like Microsoft Excel, web browsers like Google Chrome, email clients like Microsoft Outlook, and multimedia players like VLC Media Player. Application software can be further categorized into general-purpose applications (e.g., productivity software, communication software) and specialized applications (e.g., graphic design software, engineering software).
+
+Software development involves various stages, including requirements analysis, design, coding, testing, deployment, and maintenance. Developers use programming languages, libraries, frameworks, and development tools to create software applications. Software development methodologies, such as Agile, Waterfall, and DevOps, provide frameworks for organizing and managing the development process.
+
+Software plays a critical role in modern technology, enabling computers and electronic devices to perform a wide range of tasks and functions to meet the needs of users and organizations. Advances in software development continue to drive innovation and shape the digital landscape.` },
+
+
+
+
+{ query: "industry", response: `industry refers to a set of instructions or programs that tell a computer or other electronic devices what to do. It encompasses applications, operating systems, utilities, and other programs that enable computers to perform various tasks. Software can be broadly classified into two main categories:
+
+System Software: This type of software provides the foundational functions necessary for a computer system to operate. It includes operating systems like Windows, macOS, Linux, and Unix, which manage hardware resources and provide a user interface for interacting with the computer. System software also includes device drivers, which allow the operating system to communicate with hardware devices such as printers, graphics cards, and storage drives.
+
+Application Software: Application software consists of programs designed to perform specific tasks or provide functionality for end-users. Examples include word processors like Microsoft Word, spreadsheet applications like Microsoft Excel, web browsers like Google Chrome, email clients like Microsoft Outlook, and multimedia players like VLC Media Player. Application software can be further categorized into general-purpose applications (e.g., productivity software, communication software) and specialized applications (e.g., graphic design software, engineering software).
+
+Software development involves various stages, including requirements analysis, design, coding, testing, deployment, and maintenance. Developers use programming languages, libraries, frameworks, and development tools to create software applications. Software development methodologies, such as Agile, Waterfall, and DevOps, provide frameworks for organizing and managing the development process.
+
+Software plays a critical role in modern technology, enabling computers and electronic devices to perform a wide range of tasks and functions to meet the needs of users and organizations. Advances in software development continue to drive innovation and shape the digital landscape.` },
+
+
+
+    { query: "devops", response: "DevOps, short for Development and Operations, is a set of practices aimed at improving collaboration and communication between software development (Dev) and IT operations (Ops) teams. It emphasizes automation, continuous integration, continuous delivery, and infrastructure as code to streamline the software development and deployment processes. In a DevOps environment, developers and operations teams work closely together throughout the entire software development lifecycle, from planning and coding to testing, deployment, and monitoring. This collaboration helps to increase the speed, efficiency, and quality of software delivery, leading to faster innovation and better responsiveness to customer needs. Key principles of DevOps include: Collaboration: Breaking down silos between development and operations teams to foster better communication and teamwork. Automation: Automating repetitive tasks such as testing, deployment, and infrastructure provisioning to improve efficiency and reduce errors. Continuous Integration (CI): Integrating code changes frequently (often multiple times a day) into a shared repository, where automated tests are run to ensure early detection of issues. Continuous Delivery (CD): Ensuring that code changes can be deployed to production at any time, usually through automation, allowing for faster and more reliable releases. Infrastructure as Code (IaC): Managing and provisioning infrastructure (such as servers, networks, and databases) through code and automation tools, making it easier to manage and replicate environments. DevOps practices are supported by a variety of tools and technologies, including version control systems (e.g., Git), continuous integration servers (e.g., Jenkins, Travis CI), configuration management tools (e.g., Ansible, Chef, Puppet), containerization platforms (e.g., Docker, Kubernetes), and monitoring solutions (e.g., Prometheus, Grafana). Overall, DevOps aims to bridge the gap between development and operations teams, enabling organizations to deliver high-quality software more rapidly and reliably, ultimately leading to improved customer satisfaction and business outcomes." },
+
+    { query: "another query", response: "Another response" },
+];
+
+
+        // Function to display response with typing effect
+function displayResponse(query, response) {
+    const searchResultDiv = document.getElementById("searchResult");
+    searchResultDiv.innerHTML = `
+        <div class="card">
+            <div class="card-header">
+                <h2>Query: ${query}</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Response:</strong></p>
+                <p id="responseText"></p>
+            </div>
+        </div>
+    `;
+    document.getElementById("buttonContainer").style.display = "block"; // Show button container
+    document.getElementById("copyButton").disabled = false; // Enable copy button
+    document.getElementById("downloadButton").disabled = false; // Enable download button
+    document.getElementById("speakButton").disabled = false; // Enable speak button
+
+    // Simulate typing effect
+    const responseTextElement = document.getElementById("responseText");
+    const responseCharacters = response.split('');
+    let index = 0;
+    const typingInterval = setInterval(() => {
+        if (index < responseCharacters.length) {
+            responseTextElement.textContent += responseCharacters[index++];
+        } else {
+            clearInterval(typingInterval);
+        }
+    }, 50); // Adjust typing speed as needed
+}
+
+
+        // Function to copy the response to clipboard
+        function copyResponse() {
+            const responseText = document.getElementById("responseText").innerText;
+            navigator.clipboard.writeText(responseText).then(() => {
+                alert("Response copied to clipboard!");
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Function to download the response as a text file
+        function downloadResponse() {
+            const responseText = document.getElementById("responseText").innerText;
+            const a = document.createElement("a");
+            const blob = new Blob([responseText], { type: 'text/plain' });
+            a.href = URL.createObjectURL(blob);
+            a.download = "response.txt";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Function to speak the response
+        function speakResponse() {
+            const responseText = document.getElementById("responseText").innerText;
+            const utterance = new SpeechSynthesisUtterance(responseText);
+            if (document.getElementById("voiceSelect").value === "female") {
+                utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Female');
+            } else {
+                utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Male');
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Function to change voice selection
+        function changeVoice() {
+            // Call speakResponse to update the voice
+            speakResponse();
+        }
+
+function toggleDarkMode() {
+    document.body.classList.add("dark-mode");
+}
+
+function toggleLightMode() {
+    document.body.classList.remove("dark-mode");
+}
+
+
+
+    </script>
+
+
+</body>
+</html>
