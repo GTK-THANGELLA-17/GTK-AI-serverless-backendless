@@ -222,6 +222,7 @@ box-shadow: 15px 16px 8px rgba(230, 230, 230, 0.2);
         </div>
     </div>
 
+
    <!-- Copy and download buttons -->
 <div id="buttonContainer" class="button-container" style="display: none;">
     <button id="copyButton" onclick="copyResponse()" disabled>Copy Response</button>
@@ -235,7 +236,7 @@ box-shadow: 15px 16px 8px rgba(230, 230, 230, 0.2);
 </div>
 
 <!-- Query History -->
-<div class="query-history" id="queryHistoryContainer" style="display: none;">
+<div class="query-history" id="queryHistoryContainer">
     <h2>Query History</h2>
     <ul id="queryHistory">
         <!-- Query history items will be dynamically added here -->
@@ -282,32 +283,49 @@ box-shadow: 15px 16px 8px rgba(230, 230, 230, 0.2);
         }
 
         // Function to search for the query
-        function search() {
-            const input = document.getElementById("searchInput").value.toLowerCase();
-            let bestMatch = null; // Best matching response
+function search() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    let bestMatch = null; // Best matching response
 
-            // Preprocess the input (remove punctuation, convert to lowercase, etc.)
-            const processedInput = preprocessInput(input);
+    // Preprocess the input (remove punctuation, convert to lowercase, etc.)
+    const processedInput = preprocessInput(input);
 
-            // Perform keyword extraction to identify relevant keywords
-            const keywords = extractKeywords(processedInput);
+    // Perform keyword extraction to identify relevant keywords
+    const keywords = extractKeywords(processedInput);
 
-            // Use regular expressions to match keywords against predefined queries
-            for (let i = 0; i < searchData.length; i++) {
-                const query = searchData[i].query.toLowerCase();
-                if (matchesKeywords(query, keywords)) {
-                    bestMatch = searchData[i];
-                    break;
-                }
-            }
-
-            // Display the best matching response
-            if (bestMatch) {
-                displayResponse(bestMatch.query, bestMatch.response);
-            } else {
-                displayResponse(input, "Data not found.");
-            }
+    // Use regular expressions to match keywords against predefined queries
+    for (let i = 0; i < searchData.length; i++) {
+        const query = searchData[i].query.toLowerCase();
+        if (matchesKeywords(query, keywords)) {
+            bestMatch = searchData[i];
+            break;
         }
+    }
+
+    // Display the best matching response
+    if (bestMatch) {
+        displayResponse(bestMatch.query, bestMatch.response);
+        updateQueryHistory(bestMatch.query); // Add the query to the history
+    } else {
+        displayResponse(input, "Data not found.");
+        updateQueryHistory(input); // Add the query to the history
+    }
+}
+
+// Function to update query history
+function updateQueryHistory(query) {
+    const queryHistory = document.getElementById("queryHistory");
+    const listItem = document.createElement("li");
+    listItem.textContent = query;
+    queryHistory.appendChild(listItem);
+}
+
+// Function to clear query history
+function clearHistory() {
+    const queryHistory = document.getElementById("queryHistory");
+    queryHistory.innerHTML = ''; // Clear the query history container
+}
+
 
         // Function to preprocess the input text
         function preprocessInput(input) {
