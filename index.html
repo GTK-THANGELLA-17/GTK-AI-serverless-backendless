@@ -152,7 +152,7 @@
 
         .dark-mode .card {
             background-color: #444;
-box-shadow: 19px 23px 12px rgba(1, 61, 63, 0.4);
+box-shadow: 15px 16px 8px rgba(230, 230, 230, 0.2);
             color: #fff;
         }
 
@@ -425,21 +425,27 @@ Software plays a critical role in modern technology, enabling computers and elec
 function speakResponse() {
     const responseText = document.getElementById("responseText").innerText;
     const utterance = new SpeechSynthesisUtterance(responseText);
+
+    // Selecting voice
     if (document.getElementById("voiceSelect").value === "female") {
         utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Female');
     } else {
         utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Male');
     }
+
+    // Speak the response
     window.speechSynthesis.speak(utterance);
 
-    // Add event listener to stop speech synthesis before page reload
-    window.addEventListener('beforeunload', stopSpeech);
+    // Add event listener to stop speech synthesis when the user interacts with the page
+    document.body.addEventListener('mousedown', stopSpeechOnce);
 }
 
 // Function to stop speech synthesis
-function stopSpeech() {
+function stopSpeechOnce() {
     if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
+        // Remove the event listener after stopping speech synthesis
+        document.body.removeEventListener('mousedown', stopSpeechOnce);
     }
 }
 
