@@ -137,7 +137,7 @@
 
         /* Dark mode styles */
         .dark-mode {
-            background-color: #121212;
+            background: radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, rgb(0, 0, 0) 99.4%);
             color: #ffffff;
         }
 
@@ -196,7 +196,7 @@ box-shadow: 19px 23px 12px rgba(1, 61, 63, 0.4);
             color: #45a049;
         }
 
-    </style>ss
+    </style>
 </head>
 <body>
     <header>
@@ -422,16 +422,27 @@ Software plays a critical role in modern technology, enabling computers and elec
         }
 
         // Function to speak the response
-        function speakResponse() {
-            const responseText = document.getElementById("responseText").innerText;
-            const utterance = new SpeechSynthesisUtterance(responseText);
-            if (document.getElementById("voiceSelect").value === "female") {
-                utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Female');
-            } else {
-                utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Male');
-            }
-            window.speechSynthesis.speak(utterance);
-        }
+function speakResponse() {
+    const responseText = document.getElementById("responseText").innerText;
+    const utterance = new SpeechSynthesisUtterance(responseText);
+    if (document.getElementById("voiceSelect").value === "female") {
+        utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Female');
+    } else {
+        utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Male');
+    }
+    window.speechSynthesis.speak(utterance);
+
+    // Add event listener to stop speech synthesis before page reload
+    window.addEventListener('beforeunload', stopSpeech);
+}
+
+// Function to stop speech synthesis
+function stopSpeech() {
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+    }
+}
+
 
         // Function to change voice selection
         function changeVoice() {
