@@ -5,186 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Search</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-     <style>
-       /* Reset default margin and padding */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=HK+Modular&display=swap" rel="stylesheet">
+    <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #F1F1F2;
+            font-family: 'HK Modular', sans-serif;
+            background: linear-gradient(to top, #dfe9f3 0%, white 100%);
             color: #333;
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 0 20px;
+        .dark-mode {
+            background:#141010;
+            color: #f1f1f1;
         }
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
+        .container {
+            margin-top: 50px;
             text-align: center;
         }
 
-        .input-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            outline: none;
-        }
-
-        button {
-            padding: 12px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            background-color: #90AFC5;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #2A3132;
+        header, footer {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
         .card {
-    margin-top: 30px;
-    padding: 20px;
-    border-radius: 8px;
-   box-shadow: 19px 23px 12px rgba(3, 3, 3, 0.4);
-    background-color: #fff;
-    position: relative; /* Ensure relative positioning for absolute children */
-}
+            margin-top: 30px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+        }
 
+        .card:hover {
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
 
         .card-header {
-            border-bottom: 2px solid #4CAF50;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-
-        .card-header h2 {
-            font-size: 24px;
-        }
-
-        .card-body {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .button-container {
-            margin-top: 30px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        #voiceSelectContainer {
-            margin-top: 20px;
-        }
-
-        #voiceSelectContainer label {
-            font-size: 16px;
-        }
-
-        #voiceSelectContainer select {
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            outline: none;
-            background-color: #fff;
-            cursor: pointer;
-        }
-
-        #voiceSelectContainer select:focus {
-            border-color: #4CAF50;
-        }
-
-        .mode-buttons {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .mode-buttons button {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .mode-buttons i {
-            font-size: 30px;
-            color: #2A3132; /* Color for darkmode/lightmode icons */
-        }
-
-        /* Dark mode styles */
-        .dark-mode {
-            background: radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, rgb(0, 0, 0) 99.4%);
-            color: #ffffff;
-        }
-
-        .dark-mode button {
-            background-color: #666;
-            color: #fff;
-        }
-
-        .dark-mode button:hover {
-            background-color: #555;
-        }
-
-        .dark-mode .card {
-            background-color: #444;
-box-shadow: 15px 16px 8px rgba(230, 230, 230, 0.2);
-            color: #fff;
+            background-color: #323232;
+            color: white;
         }
 
         .dark-mode .card-header {
-            border-color: #4CAF50;
+            background:#060608;
         }
 
-        .dark-mode #voiceSelectContainer select {
-            border-color: #666;
-            background-color: #444;
+        .dark-mode .card {
+            background: radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, rgb(0, 0, 0) 99.4%);
+
         }
 
-        .dark-mode #voiceSelectContainer select:focus {
-            border-color: #4CAF50;
-        }
+        .dark-mode .list-group-item {
+             background: radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, rgb(0, 0, 0) 99.4%);
 
+            color: #fff;
+        }
 
         .footer-icon {
             font-size: 24px;
             margin: 0 10px;
+            animation: neon 1.5s infinite alternate;
         }
 
-        
         .query-history {
-            text-align: left;
             margin-top: 20px;
         }
 
         .share-options {
             margin-top: 20px;
-            display: flex;
-            justify-content: center;
         }
 
         .share-option {
@@ -196,75 +84,307 @@ box-shadow: 15px 16px 8px rgba(230, 230, 230, 0.2);
             color: #45a049;
         }
 
+        .btn-icon {
+            margin-left: 5px;
+        }
+
+        .loading-animation {
+            display: none;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .fade-in {
+            animation: fadeIn 2s;
+        }
+
+        .fade-out {
+            animation: fadeOut 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .response-placeholder {
+            display: none;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .mode-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .loading-page {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: #f1f1f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 25px;
+            color: #333;
+            z-index: 10000;
+            animation: fadeIn 2s;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .footer-icon {
+            animation: neon 1.5s infinite alternate;
+        }
+
+        @keyframes neon {
+            0% {
+                text-shadow: 0 0 5px #00ffea, 0 0 20px #00ffea, 0 0 30px #00ffea, 0 0 40px #00ffea, 0 0 50px #00ffea, 0 0 60px #00ffea, 0 0 70px #00ffea;
+                transform: scale(1);
+            }
+            100% {
+                text-shadow: 0 0 10px #00ffea, 0 0 30px #ff00ff, 0 0 40px #ff0000, 0 0 50px #00ff00, 0 0 60px #0000ff, 0 0 70px #ffff00, 0 0 80px #00ffff;
+                transform: scale(1.1);
+            }
+        }
+
+        .btn {
+            font-family: 'HK Modular', sans-serif;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: radial-gradient(circle at 10% 20%, rgb(69, 86, 102) 0%, rgb(34, 34, 34) 90%);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #00ccba;
+        }
+
+        .input-group .btn-outline-secondary {
+            background: linear-gradient(180.2deg, rgb(30, 33, 48) 6.8%, rgb(74, 98, 110) 131%);
+            color: #00ffea;
+        }
+
+        .input-group .btn-outline-secondary:hover {
+            background-color: #00ffea;
+            color: #121212;
+        }
+.info-button {
+     background: linear-gradient(109.6deg, rgb(72, 200, 160) 11.2%, rgb(32, 40, 48) 91.3%);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.cancel-button {
+    background: linear-gradient(109.6deg, rgb(72, 200, 160) 11.2%, rgb(32, 40, 48) 91.3%);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px; /* Add margin for spacing */
+}
+
+.info-box {
+    background-color: #f2f2f2#d9dad7;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    display: none; /* Hide info box by default */
+}
+
+.info-box h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.info-box ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            display: none;
+            z-index: 1000;
+        }
+
+        .show-footer {
+            display: block;
+        }
+
     </style>
 </head>
 <body>
-    <header>
-        <h1>GTK AI  <i class="fas fa-robot footer-icon"></i></h1>
-    </header>
 
-    <div class="container">
-        <h1>AI Search</h1>
-        <div class="input-container">
-            <input type="text" id="searchInput" placeholder="Speak or type your query...">
-            <button onclick="startRecognition()"><i class="fas fa-microphone"></i></button>
-        </div>
-        <button onclick="search()">Search</button>
-        <div id="searchResult"></div>
+  <div class="loading-page" id="loadingPage">Generate Talk Know-AI</div>
 
-        <!-- Voice selection -->
-        <div id="voiceSelectContainer" style="display: none;">
-            <label for="voiceSelect">Select Voice:</label>
-            <select id="voiceSelect" onchange="changeVoice()">
-                <option value="male">Male Voice</option>
-                <option value="female">Female Voice</option>
-            </select>
+    <div class="container fade-in">
+        <header class="text-center">
+            <h1 id="headerText"><i class="fas fa-robot footer-icon" onclick="showInfo()"></i> GTK AI</h1>
+        </header>
+
+        <section id="info" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <h3>About GTK AI</h3>
+                </div>
+                <div class="card-body">
+                    <p>GTK AI stands for Generate, Talk, Know AI. It's an AI platform that can generate responses, engage in conversation, and possess knowledge to provide informative answers to user queries.</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-secondary" onclick="hideInfo()">Cancel</button>
+                </div>
+            </div>
+        </section>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="input-group mb-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Speak or type your query...">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" onclick="startRecognition()" aria-label="Start Speech Recognition"><i class="fas fa-microphone"></i></button>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" style="max-width: 200px; margin: auto;" onclick="search()" aria-label="Search"><i class="fas fa-search"></i> Search</button>
+            <div class="loading-animation" id="loadingAnimation">
+                <i class="fas fa-spinner fa-spin"></i> Loading response...
+            </div>
+            <div id="searchResult"></div>
         </div>
     </div>
 
+    <!-- Voice selection -->
+    <div id="voiceSelectContainer" class="mt-3" style="display: none;">
+        <label for="voiceSelect">Select Voice:</label>
+        <select id="voiceSelect" class="custom-select" onchange="changeVoice()">
+            <option value="male">Male Voice</option>
+            <option value="female">Female Voice</option>
+        </select>
+    </div>
 
-   <!-- Copy and download buttons -->
-<div id="buttonContainer" class="button-container" style="display: none;">
-    <button id="copyButton" onclick="copyResponse()" disabled>Copy Response</button>
-    <button id="downloadButton" onclick="downloadResponse()" disabled>Download Response</button>
-    <button id="speakButton" onclick="speakResponse()" disabled>Speak Response</button>
+    <!-- Copy and download buttons -->
+    <div id="buttonContainer" class="button-container mt-3 text-center" style="display: none;">
+        <button id="copyButton" class="btn btn-secondary" onclick="copyResponse()" disabled><i class="fas fa-copy"></i> Copy Response</button>
+        <button id="downloadButton" class="btn btn-secondary" onclick="downloadResponse()" disabled><i class="fas fa-download"></i> Download Response</button>
+        <button id="speakButton" class="btn btn-secondary" onclick="speakResponse()" disabled><i class="fas fa-volume-up"></i> Speak Response</button>
+    </div>
+
+    <!-- Share button and options -->
+    <div class="share-options mt-3 text-center">
+        <button class="btn btn-outline-primary" onclick="toggleShareOptions()"><i class="fas fa-share"></i> Share</button>
+        <div id="shareButtons" class="mt-3" style="display: none;">
+            <button class="btn btn-outline-primary" onclick="shareByEmail()"><i class="fas fa-envelope"></i> Email</button>
+            <button class="btn btn-outline-success" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+            <button class="btn btn-outline-info" onclick="shareOnInstagram()"><i class="fab fa-instagram"></i> Instagram</button>
+            <button class="btn btn-outline-secondary" onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</button>
+        </div>
+    </div>
+
+    <!-- Query History -->
+    <div class="col-md-6 query-history">
+        <h2>Query History</h2>
+        <ul id="queryHistory" class="list-group">
+            <!-- Query history items will be dynamically added here -->
+        </ul>
+        <button class="btn btn-danger mt-3" onclick="clearHistory()" aria-label="Clear History"><i class="fas fa-trash-alt"></i> Clear History</button>
+    </div>
 </div>
 
+<!-- Dark Mode Toggle -->
 <div class="mode-buttons">
-    <button onclick="toggleLightMode()"><i class="far fa-sun"></i></button>
-    <button onclick="toggleDarkMode()"><i class="far fa-moon"></i></button>
+    <button class="btn btn-light" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode"><i class="far fa-moon"></i></button>
 </div>
+<!-- Info button to show info box -->
+<button id="infoButton" class="info-button">Info</button>
 
-<!-- Query History -->
-<div class="query-history" id="queryHistoryContainer">
-    <h2>Query History</h2>
-    <ul id="queryHistory">
-        <!-- Query history items will be dynamically added here -->
+<!-- Info box with toggle functionality -->
+<div id="infoBox" class="info-box">
+    <h3>Commands and Functionalities</h3>
+    <ul>
+        <li><strong>Open Websites:</strong> You can say commands like "open Google", "open Amazon","open Flipkart","open Netflix","open Youtube","open gmail", etc.</li>
+        <li><strong>Basic Responses:</strong> Commands for basic interactions like "how are you" etc.</li>
+        <li><strong>Search Queries:</strong> Speak queries like "search for Devops", "Software", etc.</li>
+        <li><strong>Interaction:</strong> Use commands like "who are you", "what can you do","Creater of this ai", etc., to interact.</li>
+        <li><strong>Voice Control:</strong> Control functions with voice.</li>
     </ul>
-    <button onclick="clearHistory()">Clear History</button>
+    <button id="cancelButton" class="cancel-button">Cancel</button>
 </div>
+<footer class="text-center mt-5">
+    <p>Designed and built by G.Thangella &copy; 2024. All rights reserved.</p>
+    <p>This website is protected by copyright law. Unauthorized use or modification of the code is prohibited.</p>
+    <i class="fas fa-robot footer-icon"></i>
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
 
-<!-- Share Options -->
-<div id="shareOptions" class="share-options" style="display: none;">
-    <button onclick="shareByEmail()">Email</button>
-    <button onclick="shareOnWhatsApp()">WhatsApp</button>
-    <button onclick="shareOnInstagram()">Instagram</button>
-    <button onclick="copyLink()">Copy Link</button>
-</div>
+    // JavaScript to handle toggle functionality
+            document.addEventListener("DOMContentLoaded", function() {
+                var infoButton = document.getElementById("infoButton");
+                var infoBox = document.getElementById("infoBox");
+                var cancelButton = document.getElementById("cancelButton");
 
-    <footer id="footer">
-        <li>Designed and built by Your G.Thangella &copy; 2024. All rights reserved.</li>
-        <li>This website is protected by copyright law. Unauthorized use or modification of the code is prohibited.</li>
-        <li>Contact support for assistance: imgtk17@gmail.com</li>
-<i class="fas fa-robot footer-icon"></i>
-    </footer>
+                // Show info box when clicking info button
+                infoButton.addEventListener("click", function() {
+                    infoBox.style.display = "block";
+                });
 
-    <script>
-        let recognition = new webkitSpeechRecognition(); // Create a SpeechRecognition object
-        recognition.continuous = true; // Set continuous listening mode
-        recognition.interimResults = true; // Enable interim results for real-time recognition
+                // Hide info box when clicking cancel button
+                cancelButton.addEventListener("click", function() {
+                    infoBox.style.display = "none";
+                });
+            });
 
-        // Event listener for speech recognition result
+        // Loading page animation
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => {
+                document.getElementById("loadingPage").classList.add("hide");
+                document.querySelector(".container").classList.add("fade-in");
+            }, 2000);
+        });
+
+        let recognition;
+
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+        } else if ('SpeechRecognition' in window) {
+            recognition = new SpeechRecognition();
+        } else {
+            alert("Speech recognition not supported in this browser. Please use Chrome.");
+        }
+
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
         recognition.onresult = function(event) {
             let interimTranscript = '';
             for (let i = event.resultIndex; i < event.results.length; ++i) {
@@ -277,257 +397,427 @@ box-shadow: 15px 16px 8px rgba(230, 230, 230, 0.2);
             }
         };
 
-        // Function to start speech recognition
         function startRecognition() {
             recognition.start();
         }
 
-        // Function to search for the query
-function search() {
-    const input = document.getElementById("searchInput").value.toLowerCase();
-    let bestMatch = null; // Best matching response
+        function search() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            if (!input) return;
 
-    // Preprocess the input (remove punctuation, convert to lowercase, etc.)
-    const processedInput = preprocessInput(input);
+            let bestMatch = null;
 
-    // Perform keyword extraction to identify relevant keywords
-    const keywords = extractKeywords(processedInput);
+            const processedInput = preprocessInput(input);
+            const keywords = extractKeywords(processedInput);
 
-    // Use regular expressions to match keywords against predefined queries
-    for (let i = 0; i < searchData.length; i++) {
-        const query = searchData[i].query.toLowerCase();
-        if (matchesKeywords(query, keywords)) {
-            bestMatch = searchData[i];
-            break;
+            for (let i = 0; i < searchData.length; i++) {
+                const query = searchData[i].query.toLowerCase();
+                if (matchesKeywords(query, keywords)) {
+                    bestMatch = searchData[i];
+                    break;
+                }
+            }
+
+            document.getElementById("loadingAnimation").style.display = 'block';
+            document.getElementById("searchResult").style.display = 'none';
+            document.getElementById("buttonContainer").style.display = 'none';
+            setTimeout(() => {
+                document.getElementById("loadingAnimation").style.display = 'none';
+                if (bestMatch) {
+                    displayResponse(bestMatch.query, bestMatch.response);
+                    updateQueryHistory(bestMatch.query);
+                } else {
+                    displayResponse(input, "Sorry, the information you asked is not available. Try another query.");
+                    updateQueryHistory(input);
+                }
+            }, 2000);
         }
-    }
 
-    // Display the best matching response
-    if (bestMatch) {
-        displayResponse(bestMatch.query, bestMatch.response);
-        updateQueryHistory(bestMatch.query); // Add the query to the history
-    } else {
-        displayResponse(input, "Data not found.");
-        updateQueryHistory(input); // Add the query to the history
-    }
-}
+        function updateQueryHistory(query) {
+            const queryHistory = document.getElementById("queryHistory");
+            const listItem = document.createElement("li");
+            listItem.textContent = query;
+            listItem.className = "list-group-item";
+            queryHistory.appendChild(listItem);
+        }
 
-// Function to update query history
-function updateQueryHistory(query) {
-    const queryHistory = document.getElementById("queryHistory");
-    const listItem = document.createElement("li");
-    listItem.textContent = query;
-    queryHistory.appendChild(listItem);
-}
+        function clearHistory() {
+            const queryHistory = document.getElementById("queryHistory");
+            queryHistory.classList.add("fade-out");
+            setTimeout(() => {
+                queryHistory.innerHTML = '';
+                queryHistory.classList.remove("fade-out");
+            }, 1000);
+        }
 
-// Function to clear query history
-function clearHistory() {
-    const queryHistory = document.getElementById("queryHistory");
-    queryHistory.innerHTML = ''; // Clear the query history container
-}
-
-
-        // Function to preprocess the input text
         function preprocessInput(input) {
-            // Remove punctuation and convert to lowercase
             return input.replace(/[^\w\s]/gi, '').toLowerCase();
         }
 
-        // Function to extract keywords from the input text
         function extractKeywords(input) {
-            // Simple keyword extraction by splitting input into words
             return input.split(' ');
         }
 
-        // Function to match keywords against a query
         function matchesKeywords(query, keywords) {
-            // Match all keywords using regular expressions
             const regex = new RegExp(keywords.join('|'), 'gi');
             return query.match(regex);
         }
 
-         // Define the data to search within
-const searchData = [
-    { query: "hello", response: "Hello! How can I help you?" },
-    { query: "thangella", response: "The Creator of this AI" },
-    { query: "how are you", response: "I'm just a computer program, but I'm functioning well. How about you?" },
-    { query: "your query", response: "Your response" },
-    { query: "when this ai created and by whom", response: "This ai is created on 27-04-2024 By G.Thangella" },
-    { query: "software", response: `Software refers to a set of instructions or programs that tell a computer or other electronic devices what to do. It encompasses applications, operating systems, utilities, and other programs that enable computers to perform various tasks. Software can be broadly classified into two main categories:
+        const searchData = [
+            { query: "hello", response: "Hello! How can I help you?" },
+    { query: "hi", response: "Hi! How can I help you?" },
+            { query: "thangella", response: "The Creator of this AI" },
+            { query: "how are you", response: "I'm just a computer program, but I'm functioning well. How about you?" },
+            { query: "your query", response: "Your response" },
+            { query: "when this ai created and by whom", response: "This ai is created on 27-04-2024 By G.Thangella" },
+            { query: "software", response: `Software refers to a set of instructions or programs that tell a computer or other electronic devices what to do. It encompasses applications, operating systems, utilities, and other programs that enable computers to perform various tasks. Software can be broadly classified into two main categories:
 
-System Software: This type of software provides the foundational functions necessary for a computer system to operate. It includes operating systems like Windows, macOS, Linux, and Unix, which manage hardware resources and provide a user interface for interacting with the computer. System software also includes device drivers, which allow the operating system to communicate with hardware devices such as printers, graphics cards, and storage drives.
+    System Software: This type of software provides the foundational functions necessary for a computer system to operate. It includes operating systems like Windows, macOS, Linux, and Unix, which manage hardware resources and provide a user interface for interacting with the computer. System software also includes device drivers, which allow the operating system to communicate with hardware devices such as printers, graphics cards, and storage drives.
 
-Application Software: Application software consists of programs designed to perform specific tasks or provide functionality for end-users. Examples include word processors like Microsoft Word, spreadsheet applications like Microsoft Excel, web browsers like Google Chrome, email clients like Microsoft Outlook, and multimedia players like VLC Media Player. Application software can be further categorized into general-purpose applications (e.g., productivity software, communication software) and specialized applications (e.g., graphic design software, engineering software).
+    Application Software: Application software consists of programs designed to perform specific tasks or provide functionality for end-users. Examples include word processors like Microsoft Word, spreadsheet applications like Microsoft Excel, web browsers like Google Chrome, email clients like Microsoft Outlook, and multimedia players like VLC Media Player. Application software can be further categorized into general-purpose applications (e.g., productivity software, communication software) and specialized applications (e.g., graphic design software, engineering software).
 
-Software development involves various stages, including requirements analysis, design, coding, testing, deployment, and maintenance. Developers use programming languages, libraries, frameworks, and development tools to create software applications. Software development methodologies, such as Agile, Waterfall, and DevOps, provide frameworks for organizing and managing the development process.
+    Software development involves various stages, including requirements analysis, design, coding, testing, deployment, and maintenance. Developers use programming languages, libraries, frameworks, and development tools to create software applications. Software development methodologies, such as Agile, Waterfall, and DevOps, provide frameworks for organizing and managing the development process.
 
-Software plays a critical role in modern technology, enabling computers and electronic devices to perform a wide range of tasks and functions to meet the needs of users and organizations. Advances in software development continue to drive innovation and shape the digital landscape.` },
+    Software plays a critical role in modern technology, enabling computers and electronic devices to perform a wide range of tasks and functions to meet the needs of users and organizations. Advances in software development continue to drive innovation and shape the digital landscape.` },
+            { query: "industry", response: `Industry refers to the production of goods or related services within an economy. There are several classifications of industry sectors including primary (raw materials), secondary (manufacturing), and tertiary (services).` },
+            { query: "devops", response: "DevOps, short for Development and Operations, is a set of practices aimed at improving collaboration and communication between software development (Dev) and IT operations (Ops) teams. It emphasizes automation, continuous integration, continuous delivery, and infrastructure as code to streamline the software development and deployment processes. In a DevOps environment, developers and operations teams work closely together throughout the entire software development lifecycle, from planning and coding to testing, deployment, and monitoring. This collaboration helps to increase the speed, efficiency, and quality of software delivery, leading to faster innovation and better responsiveness to customer needs." },
+            { query: "another query", response: "Another response" },
+        ];
 
-
-
-
-{ query: "industry", response: `industry refers to a set of instructions or programs that tell a computer or other electronic devices what to do. It encompasses applications, operating systems, utilities, and other programs that enable computers to perform various tasks. Software can be broadly classified into two main categories:
-
-System Software: This type of software provides the foundational functions necessary for a computer system to operate. It includes operating systems like Windows, macOS, Linux, and Unix, which manage hardware resources and provide a user interface for interacting with the computer. System software also includes device drivers, which allow the operating system to communicate with hardware devices such as printers, graphics cards, and storage drives.
-
-Application Software: Application software consists of programs designed to perform specific tasks or provide functionality for end-users. Examples include word processors like Microsoft Word, spreadsheet applications like Microsoft Excel, web browsers like Google Chrome, email clients like Microsoft Outlook, and multimedia players like VLC Media Player. Application software can be further categorized into general-purpose applications (e.g., productivity software, communication software) and specialized applications (e.g., graphic design software, engineering software).
-
-Software development involves various stages, including requirements analysis, design, coding, testing, deployment, and maintenance. Developers use programming languages, libraries, frameworks, and development tools to create software applications. Software development methodologies, such as Agile, Waterfall, and DevOps, provide frameworks for organizing and managing the development process.
-
-Software plays a critical role in modern technology, enabling computers and electronic devices to perform a wide range of tasks and functions to meet the needs of users and organizations. Advances in software development continue to drive innovation and shape the digital landscape.` },
-
-
-
-    { query: "devops", response: "DevOps, short for Development and Operations, is a set of practices aimed at improving collaboration and communication between software development (Dev) and IT operations (Ops) teams. It emphasizes automation, continuous integration, continuous delivery, and infrastructure as code to streamline the software development and deployment processes. In a DevOps environment, developers and operations teams work closely together throughout the entire software development lifecycle, from planning and coding to testing, deployment, and monitoring. This collaboration helps to increase the speed, efficiency, and quality of software delivery, leading to faster innovation and better responsiveness to customer needs. Key principles of DevOps include: Collaboration: Breaking down silos between development and operations teams to foster better communication and teamwork. Automation: Automating repetitive tasks such as testing, deployment, and infrastructure provisioning to improve efficiency and reduce errors. Continuous Integration (CI): Integrating code changes frequently (often multiple times a day) into a shared repository, where automated tests are run to ensure early detection of issues. Continuous Delivery (CD): Ensuring that code changes can be deployed to production at any time, usually through automation, allowing for faster and more reliable releases. Infrastructure as Code (IaC): Managing and provisioning infrastructure (such as servers, networks, and databases) through code and automation tools, making it easier to manage and replicate environments. DevOps practices are supported by a variety of tools and technologies, including version control systems (e.g., Git), continuous integration servers (e.g., Jenkins, Travis CI), configuration management tools (e.g., Ansible, Chef, Puppet), containerization platforms (e.g., Docker, Kubernetes), and monitoring solutions (e.g., Prometheus, Grafana). Overall, DevOps aims to bridge the gap between development and operations teams, enabling organizations to deliver high-quality software more rapidly and reliably, ultimately leading to improved customer satisfaction and business outcomes." },
-
-    { query: "another query", response: "Another response" },
-];
-
-
-        // Function to display response with typing effect
         function displayResponse(query, response) {
-            const searchResultDiv = document.getElementById("searchResult");
-            searchResultDiv.innerHTML = `
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Query: ${query}</h2>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Response:</strong></p>
-                        <p id="responseText"></p>
-                    </div>
+        const searchResultDiv = document.getElementById("searchResult");
+        searchResultDiv.innerHTML = `
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h2><i class="fas fa-question-circle"></i> Query: ${query}</h2>
                 </div>
-            `;
-            document.getElementById("buttonContainer").style.display = "block"; // Show button container
-            document.getElementById("copyButton").disabled = false; // Enable copy button
-            document.getElementById("downloadButton").disabled = false; // Enable download button
-            document.getElementById("speakButton").disabled = false; // Enable speak button
+                <div class="card-body">
+                    <p><strong><i class="fas fa-reply"></i> Response:</strong></p>
+                    <p id="responseText"></p>
+                </div>
+            </div>
+        `;
 
-            // Simulate typing effect
-            const responseTextElement = document.getElementById("responseText");
-            const responseCharacters = response.split('');
-            let index = 0;
-            const typingInterval = setInterval(() => {
-                if (index < responseCharacters.length) {
-                    responseTextElement.textContent += responseCharacters[index++];
-                } else {
-                    clearInterval(typingInterval);
-                    showShareOptions(response); // Show share options after typing effect completes
-                }
-            }, 10); // Adjust typing speed as needed
+        // Display the search result and button container
+        searchResultDiv.style.display = 'block';
+        document.getElementById("buttonContainer").style.display = 'block';
+
+        // Enable buttons
+        document.getElementById("copyButton").disabled = false;
+        document.getElementById("downloadButton").disabled = false;
+        document.getElementById("speakButton").disabled = false;
+
+        // Initialize elements
+        const responseTextElement = document.getElementById("responseText");
+        responseTextElement.textContent = ''; // Clear previous content if any
+
+        // Typing effect to simulate text appearing
+        const responseCharacters = response.split('');
+        let index = 0;
+        const typingInterval = setInterval(() => {
+            if (index < responseCharacters.length) {
+                responseTextElement.textContent += responseCharacters[index++];
+            } else {
+                clearInterval(typingInterval);
+                // Show share options after typing effect completes
+                showShareOptions(response);
+            }
+        }, 10);
+
+        // Speak button click handler
+        const speakButton = document.getElementById("speakButton");
+        speakButton.addEventListener("click", () => {
+            speakResponse(response);
+        });
+    }
+
+    function speakResponse(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voiceSelect = document.getElementById("voiceSelect");
+        if (voiceSelect && voiceSelect.value === "female") {
+            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Female');
+        } else {
+            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Male');
         }
 
-        // Function to copy the response to clipboard
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function showShareOptions(response) {
+        // Implement your logic to show share options here, if needed
+        console.log("Share options displayed for response: ", response);
+    }
+
         function copyResponse() {
-            const responseText = document.getElementById("responseText").innerText;
-            navigator.clipboard.writeText(responseText).then(() => {
-                alert("Response copied to clipboard!");
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
+            const responseText = document.getElementById("searchResult").innerText;
+            navigator.clipboard.writeText(responseText)
+                .then(() => alert("Response copied to clipboard!"))
+                .catch(err => console.error('Failed to copy: ', err));
         }
 
-        // Function to download the response as a text file
         function downloadResponse() {
-            const responseText = document.getElementById("responseText").innerText;
-            const a = document.createElement("a");
+            const responseText = document.getElementById("searchResult").innerText;
             const blob = new Blob([responseText], { type: 'text/plain' });
-            a.href = URL.createObjectURL(blob);
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
             a.download = "response.txt";
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
-        // Function to speak the response
-function speakResponse() {
-    const responseText = document.getElementById("responseText").innerText;
-    const utterance = new SpeechSynthesisUtterance(responseText);
+        function speakResponse() {
+            const responseText = document.getElementById("searchResult").innerText;
+            const utterance = new SpeechSynthesisUtterance(responseText);
+            const voices = window.speechSynthesis.getVoices();
+            utterance.voice = getVoice();
+            window.speechSynthesis.speak(utterance);
+        }
 
-    // Selecting voice
-    if (document.getElementById("voiceSelect").value === "female") {
-        utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Female');
-    } else {
-        utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Male');
-    }
+        function getVoice() {
+            const voiceSelect = document.getElementById("voiceSelect");
+            const selectedVoice = voiceSelect.options[voiceSelect.selectedIndex].value;
+            const voices = window.speechSynthesis.getVoices();
+            return voices.find(voice => voice.name.toLowerCase().includes(selectedVoice));
+        }
 
-    // Speak the response
-    window.speechSynthesis.speak(utterance);
-
-    // Add event listener to stop speech synthesis when the user interacts with the page
-    document.body.addEventListener('mousedown', stopSpeechOnce);
-}
-
-// Function to stop speech synthesis
-function stopSpeechOnce() {
-    if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        // Remove the event listener after stopping speech synthesis
-        document.body.removeEventListener('mousedown', stopSpeechOnce);
-    }
-}
-
-
-        // Function to change voice selection
         function changeVoice() {
-            // Call speakResponse to update the voice
-            speakResponse();
+            speakResponse(); // Update voice immediately when changed
         }
-
-        // Function to toggle dark mode
-        function toggleDarkMode() {
-            document.body.classList.add("dark-mode");
-        }
-
-        // Function to toggle light mode
-        function toggleLightMode() {
-            document.body.classList.remove("dark-mode");
-        }
-
-        // Function to copy the link to the clipboard
-function copyLink(url) {
-    const tempTextArea = document.createElement('textarea');
-    tempTextArea.value = url;
-    document.body.appendChild(tempTextArea);
-    tempTextArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempTextArea);
-    alert('Link copied to clipboard!');
+function toggleShareOptions() {
+    const shareButtons = document.getElementById("shareButtons");
+    if (shareButtons.style.display === 'none') {
+        shareButtons.style.display = 'block';
+    } else {
+        shareButtons.style.display = 'none';
+    }
 }
 
+function shareByEmail() {
+    const subject = encodeURIComponent("Check out this AI response!");
+    const body = encodeURIComponent(document.getElementById("searchResult").innerText);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
 
-        // Function to share via email
-        function shareByEmail() {
-            const responseText = document.getElementById("responseText").innerText;
-            const subject = encodeURIComponent('AI Search Response');
-            const body = encodeURIComponent(responseText);
-            const url = `https://mail.google.com/mail/?view=cm&su=${subject}&body=${body}`;
-            window.open(url, '_blank');
+function shareOnWhatsApp() {
+    const message = encodeURIComponent(document.getElementById("searchResult").innerText);
+    window.open(`https://api.whatsapp.com/send?text=${message}`, "_blank");
+}
+
+function shareOnInstagram() {
+    const recipients = encodeURIComponent('username1,username2'); // Comma-separated list of usernames
+    window.open(`https://www.instagram.com/direct/new/?recipient=${recipients}`, '_blank');
+}
+
+function copyLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url)
+        .then(() => alert("Link copied to clipboard!"))
+        .catch(err => console.error('Failed to copy link: ', err));
+}
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
         }
 
-        // Function to share via WhatsApp
-        function shareOnWhatsApp() {
-            const responseText = document.getElementById("responseText").innerText;
-            const text = encodeURIComponent(responseText);
-            const url = `https://api.whatsapp.com/send?text=${text}`;
-            window.open(url, '_blank');
+    // Existing code...
+
+    document.addEventListener('deviceready', function() {
+        // Check and request microphone permissions
+        if (cordova.plugins.permissions) {
+            cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.RECORD_AUDIO, function(status) {
+                if (status.hasPermission) {
+                    console.log('Microphone permission granted');
+                } else {
+                    console.warn('Microphone permission is not granted');
+                    alert('Please grant microphone permission to use voice commands.');
+                }
+            }, function() {
+                console.error('Error requesting microphone permission');
+            });
+        }
+    }, false);
+
+    function startRecognition() {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = false; // Ensure recognition stops after each command
+        recognition.interimResults = false;
+
+        recognition.onresult = function(event) {
+            let finalTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalTranscript += event.results[i][0].transcript;
+                }
+            }
+            // Display the recognized command in the search input
+            document.getElementById("searchInput").value = finalTranscript.trim();
+            // Process the final transcript
+            processCommand(finalTranscript.trim().toLowerCase());
+        };
+
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error detected: ' + event.error);
+        };
+
+        recognition.onend = function() {
+            console.log('Speech recognition service disconnected');
+        };
+
+        recognition.start();
+    }
+    function processCommand(query) {
+    console.log('Processing command:', query);
+    if (query.includes("open google")) {
+        openGoogle();
+    } else if (query.includes("open youtube")) {
+        openYouTube();
+    } else if (query.includes("how are you")) {
+        respondHowAreYou();
+    } else if (query.includes("who created you")) {
+        respondCreator();
+    } else if (query.includes("what is software")) {
+        respondSoftwareDefinition();
+    } else if (query.includes("what is industry")) {
+        respondIndustryDefinition();
+    } else if (query.includes("open amazon")) {
+        openAmazon();
+    } else if (query.includes("open flipkart")) {
+        openFlipkart();
+    } else if (query.includes("open netflix")) {
+        openNetflix();
+    } else if (query.includes("open amazon prime")) {
+        openAmazonPrime();
+    } else if (query.includes("open gmail")) {
+        openGmail();
+
+    } else {
+        respondDefault();
+    }
+    }
+
+    function openGoogle() {
+    window.open("https://www.google.com", "_blank");
+    }
+
+    function openYouTube() {
+    window.open("https://www.youtube.com", "_blank");
+    }
+
+    function openGmail() {
+    window.open("https://mail.google.com", "_blank");
+    }
+
+
+    function respondHowAreYou() {
+    const response = "I'm just a computer program, but I'm functioning well. How about you?";
+    speakResponse(response);
+    }
+
+    function respondCreator() {
+    const response = "I was created by G. Thangella.";
+    speakResponse(response);
+    }
+
+    function respondSoftwareDefinition() {
+    const response = "Software refers to a set of instructions or programs that tell a computer or other electronic devices what to do. It encompasses applications, operating systems, utilities, and other programs that enable computers to perform various tasks.";
+    speakResponse(response);
+    }
+
+    function respondIndustryDefinition() {
+    const response = "Industry refers to the production of goods or related services within an economy. There are several classifications of industry sectors including primary (raw materials), secondary (manufacturing), and tertiary (services).";
+    speakResponse(response);
+    }
+
+    function openAmazon() {
+    window.open("https://www.amazon.com", "_blank");
+    }
+
+    function openFlipkart() {
+    window.open("https://www.flipkart.com", "_blank");
+    }
+
+    function openNetflix() {
+    window.open("https://www.netflix.com", "_blank");
+    }
+
+    function openAmazonPrime() {
+    window.open("https://www.amazon.com/prime", "_blank");
+    }
+
+    function respondDefault() {
+    const response = "Sorry, I didn't understand that command. Please try again.";
+    speakResponse(response);
+    }
+
+    // Function to speak the response
+    function speakResponse(responseText) {
+
+        const utterance = new SpeechSynthesisUtterance(responseText);
+
+        // Selecting voice
+        if (document.getElementById("voiceSelect").value === "female") {
+            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Female');
+        } else {
+            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === 'Google UK English Male');
         }
 
-        // Function to share via Instagram
-        function shareOnInstagram() {
-            const responseText = document.getElementById("responseText").innerText;
-            const text = encodeURIComponent(responseText);
-            const url = `https://www.instagram.com/?text=${text}`;
-            window.open(url, '_blank');
+        // Speak the response
+        window.speechSynthesis.speak(utterance);
+
+        // Add event listener to stop speech synthesis when the user interacts with the page
+        document.body.addEventListener('mousedown', stopSpeechOnce);
+    }
+
+    // Function to stop speech synthesis
+    function stopSpeechOnce() {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            // Remove the event listener after stopping speech synthesis
+            document.body.removeEventListener('mousedown', stopSpeechOnce);
+        }
+    }
+
+    // Bind the startRecognition function to a button click or similar event
+    document.getElementById("startRecognitionButton").addEventListener("click", startRecognition);document.addEventListener('deviceready', function() {
+    // Check and request microphone permissions
+    if (cordova.plugins.permissions) {
+        cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.RECORD_AUDIO, function(status) {
+            if (status.hasPermission) {
+                // Permission granted, proceed with speech recognition setup
+                startRecognition();
+            } else {
+                // Permission denied, handle accordingly
+                console.warn('Microphone permission is not granted');
+                alert('Please grant microphone permission to use voice commands.');
+            }
+        }, function() {
+            // Error requesting permission
+            console.error('Error requesting microphone permission');
+        });
+    }
+    }, false);
+
+
+function showInfo() {
+            document.getElementById('info').style.display = 'block';
         }
 
-        // Function to show share options
-        function showShareOptions(responseText) {
-            document.getElementById('shareOptions').style.display = 'block';
+        function hideInfo() {
+            document.getElementById('info').style.display = 'none';
         }
 
+  window.onscroll = function() {scrollFunction()};
 
-    </script>
-
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("mainFooter").classList.add("show-footer");
+            } else {
+                document.getElementById("mainFooter").classList.remove("show-footer");
+            }
+        }
+</script>
 </body>
 </html>
+
