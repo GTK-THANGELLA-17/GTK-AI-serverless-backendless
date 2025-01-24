@@ -9,7 +9,7 @@ This repository contains an AI search interface that allows users to input queri
 - JavaScript
 
 ## Website
-Visit our website to overview [here](https://gtk-thangella-17.github.io/AI-serverless-backendless/).
+Visit our website to overview [here](https://gtk-thangella-17.github.io/GTK-AI-serverless-backendless/).
 
 **Designed and built by Your G.Thangella © 2024. All rights reserved.**
 
